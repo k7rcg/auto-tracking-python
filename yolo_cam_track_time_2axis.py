@@ -57,8 +57,14 @@ def start_tracking(stop_flag, mode="normal"):
         frame_count += 1
 
         if frame_count == 1 or (frame_count % DETECTION_INTERVAL == 0):
-            # Person(クラスID: 0)のみを検出対象にして負荷を軽減
-            results = model(source=frame, imgsz=current_imgsz, conf=0.20, verbose=False, classes=[0])
+            # --- 【修正】モードによって検知対象を切り替える ---
+            if mode == "color_memo" or color_status == "LOCKED":
+                # カラーモードの時は「人間(0)」だけに絞り込む
+                results = model(source=frame, imgsz=current_imgsz, conf=0.20, verbose=False, classes=[0])
+            else:
+                # 通常モードの時は、以前と同じく「椅子や机など何でも」検知する
+                results = model(source=frame, imgsz=current_imgsz, conf=0.20, verbose=False)
+                
             annotated_frame = results[0].plot()
 
             if results[0].boxes is not None and len(results[0].boxes) > 0:
