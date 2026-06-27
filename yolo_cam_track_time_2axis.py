@@ -36,7 +36,7 @@ def start_tracking(stop_flag, mode="normal"):
     DETECTION_INTERVAL = 5
     current_imgsz = 416
     PAN_MIN, PAN_MAX = 1638, 8192
-    TILT_MIN, TILT_MAX = 4650, 5200
+    TILT_MIN, TILT_MAX = 4300, 5500
     current_pan_duty = 4915
     current_tilt_duty = 4915
     annotated_frame = None
@@ -147,7 +147,7 @@ def start_tracking(stop_flag, mode="normal"):
                     
                     target_center_y = int((best_target_box[1] + best_target_box[3]) / 2)
                     error_y = target_center_y - screen_center_y
-                    move_tilt = -int(error_y * 0.3)
+                    move_tilt = int(error_y * 0.3)
                     current_tilt_duty += move_tilt
                     
                     current_pan_duty = max(PAN_MIN, min(PAN_MAX, current_pan_duty))
